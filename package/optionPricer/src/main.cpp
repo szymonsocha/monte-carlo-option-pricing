@@ -1,3 +1,4 @@
+#include<Rcpp.h>
 #include<iostream>
 #include<vector>
 #include<ctime>
@@ -6,6 +7,7 @@
 #include"getVecMean.h"
 #include"getVecStdDev.h"
 
+using namespace Rcpp;
 using std::vector;
 using std::cout;
 using std::cin;

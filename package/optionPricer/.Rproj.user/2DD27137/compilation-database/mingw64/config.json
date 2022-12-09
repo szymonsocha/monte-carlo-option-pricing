@@ -18,7 +18,7 @@
         "-IC:/RBuildTools/4.0/mingw64/lib/gcc/x86_64-w64-mingw32/8.3.0/include-fixed",
         "-IC:/RBuildTools/4.0/mingw64/x86_64-w64-mingw32/include",
         "-include",
-        "C:/Users/szymo/Desktop/optionPricer/.Rproj.user/2DD27137/compilation-database/mingw64/cpp-definitions.h"
+        "C:/Users/szymo/Desktop/Studia/Applied Finance/Project/AF_project/package/optionPricer/.Rproj.user/2DD27137/compilation-database/mingw64/cpp-definitions.h"
     ],
     "pch": "Rcpp",
     "is_cpp": true,
