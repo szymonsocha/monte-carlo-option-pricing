@@ -40,7 +40,6 @@ void EuropeanUpOutCall::generatePath(){
 double EuropeanUpOutCall::getEuropeanUpOutCallPrice(int nReps){
 
 	double rollingSum = 0.0;
-	double thisMean = 0.0;
 
 	for(int i = 0; i < nReps; i++){
 		generatePath();
