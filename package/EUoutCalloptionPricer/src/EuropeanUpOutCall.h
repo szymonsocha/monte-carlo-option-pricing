@@ -19,6 +19,7 @@ public:
 
 	//methods
 	void generatePath();
+	double getMaxValue();
 	void printPath();
 	double getEuropeanUpOutCallPrice(int nReps);
 	double operator()(int nReps);

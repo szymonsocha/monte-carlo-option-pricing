@@ -37,13 +37,28 @@ void EuropeanUpOutCall::generatePath(){
 
 
 //method definition
+double EuropeanUpOutCall::getMaxValue(){
+
+  double maxValue = thisPath[0];
+
+  for(int i = 0; i < nInt; i++){
+    if (thisPath[i] > maxValue)  maxValue = thisPath[i];
+  }
+
+  return maxValue;
+
+}
+
+
 double EuropeanUpOutCall::getEuropeanUpOutCallPrice(int nReps){
 
 	double rollingSum = 0.0;
+  double thisMax = 0.0;
 
 	for(int i = 0; i < nReps; i++){
 		generatePath();
-	  if(thisPath[i] < barrier) rollingSum += (thisPath[i] > strike) ? (thisPath[i] - strike) : 0;
+	  thisMax=getMaxValue();
+	  if(thisMax <= barrier) rollingSum += (thisPath[nInt-1] > strike) ? (thisPath[nInt-1] - strike) : 0;
 	}
 
 	return exp(-r*expiry)*rollingSum/double(nReps);

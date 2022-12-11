@@ -9,14 +9,15 @@ using namespace Rcpp;
 using std::vector;
 
 // [[Rcpp::export]]
-int getEuropeanUpOutCallPrice(int nInt,
-                              double strike,
-                              double barrier,
-                              double spot,
-                              double vol,
-                              double r,
-                              double expiry,
+int getEuropeanUpOutCallPrice(int nInt = 126,
+                              double strike = 100,
+                              double barrier = 130,
+                              double spot = 95,
+                              double vol = 0.24,
+                              double r = 0.07,
+                              double expiry = 0.75,
                               int nReps = 1000){
+
 
 	// set the seed
 	srand( time(NULL) );
