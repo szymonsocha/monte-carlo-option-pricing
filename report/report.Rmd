@@ -1,0 +1,28 @@
+---
+title: "Monte Carlo Option Simulation Report"
+author: "Szymon Socha"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Install package
+
+```{r install}
+devtools::install_github("szymonsocha/monte-carlo-option-pricing/package/EUoutCalloptionPricer", auth_token = "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")
+
+library(EUoutCalloptionPricer)
+```
+
+## Simulations
+
+```{r simulation}
+getEuropeanUpOutCallPrice()
+
+```
+
+
+In accordance with the Honor Code, I certify that my answers here are my own work, and I did not make my solutions available to anyone else.
