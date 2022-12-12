@@ -21,6 +21,7 @@ EuropeanUpOutCall::EuropeanUpOutCall(
 		r = r_;
 		expiry = expiry_;
 		generatePath();
+		getMaxValue();
 }
 
 //method definition
@@ -61,7 +62,7 @@ double EuropeanUpOutCall::getEuropeanUpOutCallPrice(int nReps){
 	  if(thisMax <= barrier) rollingSum += (thisPath[nInt-1] > strike) ? (thisPath[nInt-1] - strike) : 0;
 	}
 
-	return exp(-r*expiry)*rollingSum/double(nReps);
+	return double(exp(-r*expiry)*rollingSum)/double(nReps);
 
 }
 

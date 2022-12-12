@@ -11,7 +11,7 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // getEuropeanUpOutCallPrice
-int getEuropeanUpOutCallPrice(int nInt, double strike, double barrier, double spot, double vol, double r, double expiry, int nReps);
+double getEuropeanUpOutCallPrice(int nInt, double strike, double barrier, double spot, double vol, double r, double expiry, int nReps);
 RcppExport SEXP _EUoutCalloptionPricer_getEuropeanUpOutCallPrice(SEXP nIntSEXP, SEXP strikeSEXP, SEXP barrierSEXP, SEXP spotSEXP, SEXP volSEXP, SEXP rSEXP, SEXP expirySEXP, SEXP nRepsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

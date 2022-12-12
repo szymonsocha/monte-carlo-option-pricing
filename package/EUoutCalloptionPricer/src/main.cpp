@@ -9,7 +9,7 @@ using namespace Rcpp;
 using std::vector;
 
 // [[Rcpp::export]]
-int getEuropeanUpOutCallPrice(int nInt = 126,
+double getEuropeanUpOutCallPrice(int nInt = 126,
                               double strike = 100,
                               double barrier = 130,
                               double spot = 95,

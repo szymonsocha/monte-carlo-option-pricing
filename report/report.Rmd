@@ -1,28 +1,143 @@
 ---
-title: "Monte Carlo Option Simulation Report"
+title: "Path-dependent option pricing with Monte Carlo and Rcpp package"
+subtitle: "Applied Finance - Report"
 author: "Szymon Socha"
-date: "`r Sys.Date()`"
-output: html_document
+date: "2022-12-13"
+output: 
+  html_document:
+    toc: true
+    toc_float:
+      smooth_scroll: false
+    theme: paper
+    highlight: tango
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Install package
+# Description
 
-```{r install}
-devtools::install_github("szymonsocha/monte-carlo-option-pricing/package/EUoutCalloptionPricer", auth_token = "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")
+The scope of this project was to create Rcpp package to simulate path-dependent option pricing with Monte Carlo method.
+I consider a European style **up-and-out call option** with a barrier active between the moment of pricing and the option expiry.
+The goal of the project was to study how individual variables affect option pricing. Included in the report are analyses of how the option price is affected by the value of the barrier level, volatility rate and time to maturity. In addition, the relationship of how simultaneously both factors (volatility rate and time to maturity) affect option pricing is analyzed. 
+
+**Theory**
+<br> A condition of the European up-and-out call option is that it is canceled when, at any time during its term, the option price exceeds the level of a set barrier. In order for this option to make a profit for the holder, the price of the asset should be higher than the strike price on the redemption date. When the option price is lower than the strike price, the holder is not profitable to exercise the option and its value is then 0. The profit for the holder of a European up-and-out call option is therefore the difference between the final price between the price on the redemption date and the strike price (assuming that in none of the previous periods the price has exceeded the barrier and the difference between its price and the strike price is greater than zero).
+
+# Simulations
+
+## Install the `EUoutCalloptionPricer` package and load libraries
+
+The source code of the package is pushed to private repository on `github.com`. To install the package from a private repository, I created a special authorization token. I did this in order to hide my solutions from other students (according to *Honor Code*). To view the code of the package, please contact me.
+
+```{r libraries, message=FALSE, warning=FALSE, eval=FALSE, include=FALSE}
+devtools::install_github("szymonsocha/monte-carlo-option-pricing/package/EUoutCalloptionPricer", auth_token = "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")
 
 library(EUoutCalloptionPricer)
+library(ggplot2)
 ```
 
-## Simulations
+## Find proper value of Barrier level
 
-```{r simulation}
-getEuropeanUpOutCallPrice()
+The function can take any user-specified parameters for: number of price changes, price of the underyling at the moment of option pricing, strike price, barrier level, annualized volatility rate, annualized risk-free rate, time to maturity and number of iterations in Monte Carlo simulation.
 
+However, for the purposes of this report (according to the guidelines), the default function values are as follows:
+
+* price of the underyling at the moment of option pricing: **S0 = 95**
+* strike price **K = 100**
+* annualized volatility rate **σ = 0.24**
+* annualized risk-free rate **r = 0.07**
+* time to maturity **t = 0.75**
+
+The default number of Monte Carlo simulation iterations is 1000 (**nReps = 1000**).
+
+
+```{r barrier simulation, eval=FALSE, include=FALSE}
+barrier_sim <- data.frame()
+for (barrier in seq(50, 200, 1)){
+  barrier_sim = rbind(barrier_sim, c(getEuropeanUpOutCallPrice(barrier = barrier), barrier))
+}
+colnames(barrier_sim) <- c("price", "barrier")
+```
+
+```{r barrier simulation plot, eval=FALSE, include=FALSE}
+ggplot(barrier_sim, aes(x = barrier, y = price)) +
+  geom_point() +
+  labs(x = "Barrier", y = "Price", title = "Price vs Barrier level") +
+  geom_vline(xintercept=130, linetype="dashed", col = "red", size = 1) +
+  geom_text(aes(x=130, label="\n130", y=1), colour="red", angle=90) +
+  geom_vline(xintercept=100, linetype="dashed", col = "blue", size = 1) +
+  geom_text(aes(x=100, label="\nstrike price K = 100", y=2), colour="blue", angle=90) +
+  theme_bw()
 ```
 
 
-In accordance with the Honor Code, I certify that my answers here are my own work, and I did not make my solutions available to anyone else.
+## Volatility rate simulation
+
+```{r volatility simulation, eval=FALSE, include=FALSE}
+volatility_sim <- data.frame()
+
+for (vol in seq(0, 1, 0.001)){
+  volatility_sim = rbind(volatility_sim, c(getEuropeanUpOutCallPrice(vol = vol), vol))
+}
+colnames(volatility_sim) <- c("price", "vol")
+```
+
+```{r volatility simulation plot, eval=FALSE, include=FALSE}
+ggplot(volatility_sim, aes(x = vol, y = price)) + 
+  labs(x = "Volatility rate", y = "Price", title = "Price vs Volatility rate") +
+  geom_vline(xintercept=0.24, linetype="dashed", col = "blue", size = 1) +
+  geom_text(aes(x=0.24, label="\n0.24", y=1), colour="blue", angle=90) +
+  geom_point() +
+  theme_bw()
+```
+
+
+## Time to Maturity simulation
+
+```{r maturity simulation, eval=FALSE, include=FALSE}
+maturity_sim <- data.frame()
+
+for (maturity in seq(0, 1, 0.001)){
+  maturity_sim = rbind(maturity_sim, c(getEuropeanUpOutCallPrice(expiry = maturity), maturity))
+}
+colnames(maturity_sim) <- c("price", "time_to_maturity")
+```
+
+```{r maturity simulation plot, eval=FALSE, include=FALSE}
+ggplot(maturity_sim, aes(x = time_to_maturity, y = price)) +
+  labs(x = "Time to maturity", y = "Price", title = "Price vs Time to maturity") +
+  geom_vline(xintercept=0.75, linetype="dashed", col = "blue", size = 1) +
+  geom_text(aes(x=0.75, label="\n0.75", y=1), colour="blue", angle=90) +
+  geom_point() +
+  theme_bw()
+```
+
+
+## Simultanious simulation
+
+```{r volatility_x_maturity simulation, eval=FALSE, include=FALSE}
+volatility_x_maturity_sim <- data.frame()
+
+for (vol in seq(0, 1, 0.01)){
+  for (maturity in seq(0, 1, 0.01)){
+    volatility_x_maturity_sim = rbind(volatility_x_maturity_sim, c(getEuropeanUpOutCallPrice(vol = vol, expiry = maturity), vol, maturity))
+  }
+}
+colnames(volatility_x_maturity_sim) <- c("price", "vol", "time_to_maturity")
+```
+
+```{r volatility_x_maturity simulation plot, eval=FALSE, include=FALSE}
+ggplot(volatility_x_maturity_sim, aes(x = vol, y = time_to_maturity)) +
+  labs(x = "Volatility", y = "Time to maturity", title = "", fill = "Price") +
+  geom_raster(aes(fill = round(price))) +
+  scale_fill_gradient(low = "white", high = "red") +
+  theme_bw() +
+  theme(legend.position = c(0.9, 0.7))
+```
+
+# Results
+
+
+*In accordance with the Honor Code, I certify that my answers here are my own work, and I did not make my solutions available to anyone else.*
