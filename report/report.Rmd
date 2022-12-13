@@ -31,12 +31,12 @@ The goal of the project was to study how individual variables affect option pric
 
 The source code of the package is pushed to private repository on `github.com`. To install the package from a private repository, I created a special authorization token. I did this in order to hide my solutions from other students (according to *Honor Code*). To access the raw code of the package, please contact me.
 
-I tested here `renv` package. I hope that after knitting everything works and the report generates. However, if it does not work, in order to install the package please use the following command:
+I use here `renv` package (**knitting may take a while!**). Alternatively, in order to install the package please use the following command:
 
 **`devtools::install_github("szymonsocha/monte-carlo-option-pricing/package/EUoutCalloptionPricer", auth_token = "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")`**
 
 ```{r libraries, message=FALSE, warning=FALSE, include=FALSE}
-options(renv.auth.MyPackage = list(GITHUB_PAT = "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"))
+options(renv.auth.EUoutCalloptionPricer = list(GITHUB_PAT = "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"))
 renv::restore()
 library(EUoutCalloptionPricer)
 library(ggplot2)
