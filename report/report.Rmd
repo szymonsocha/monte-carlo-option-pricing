@@ -36,6 +36,7 @@ I tested here `renv` package. I hope that after knitting everything works and th
 **`devtools::install_github("szymonsocha/monte-carlo-option-pricing/package/EUoutCalloptionPricer", auth_token = "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")`**
 
 ```{r libraries, message=FALSE, warning=FALSE, include=FALSE}
+options(renv.auth.MyPackage = list(GITHUB_PAT = "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"))
 renv::restore()
 library(EUoutCalloptionPricer)
 library(ggplot2)
@@ -74,9 +75,6 @@ ggplot(barrier_sim, aes(x = barrier, y = price)) +
   geom_vline(xintercept=100, linetype="dashed", col = "blue", size = 1) +
   geom_text(aes(x=100, label="\nstrike price K = 100", y=2), colour="blue", angle=90) +
   theme_bw()
-
-install.packages("renv")
-renv::init()
 ```
 
 Analysis of the chart allows us to conclude that for any barrier level value below 100 the value of the option is equal to 0. This is because 100 is the strike price. Below this value, it is not profitable to exercise option options. It is also interesting that the value of options even for large values reaches a maximum level of about 8 and does not increase further. This may be because the volatility of the option is too low for the option price to reach some extreme values during this period.
