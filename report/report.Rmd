@@ -29,11 +29,14 @@ The goal of the project was to study how individual variables affect option pric
 
 ## Install the `EUoutCalloptionPricer` package and load libraries
 
-The source code of the package is pushed to private repository on `github.com`. To install the package from a private repository, I created a special authorization token. I did this in order to hide my solutions from other students (according to *Honor Code*). To view the code of the package, please contact me.
+The source code of the package is pushed to private repository on `github.com`. To install the package from a private repository, I created a special authorization token. I did this in order to hide my solutions from other students (according to *Honor Code*). To access the raw code of the package, please contact me.
 
-```{r libraries, message=FALSE, warning=FALSE, eval=FALSE, include=FALSE}
-devtools::install_github("szymonsocha/monte-carlo-option-pricing/package/EUoutCalloptionPricer", auth_token = "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")
+I tested here `renv` package. I hope that after knitting everything works and the report generates. However, if it does not work, in order to install the package please use the following command:
 
+**`devtools::install_github("szymonsocha/monte-carlo-option-pricing/package/EUoutCalloptionPricer", auth_token = "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")`**
+
+```{r libraries, message=FALSE, warning=FALSE, include=FALSE}
+renv::restore()
 library(EUoutCalloptionPricer)
 library(ggplot2)
 ```
@@ -44,7 +47,7 @@ The function can take any user-specified parameters for: number of price changes
 
 However, for the purposes of this report (according to the guidelines), the default function values are as follows:
 
-* price of the underyling at the moment of option pricing: **S0 = 95**
+* price of the underyling at the moment of option pricing: **S<sub>0</sub> = 95**
 * strike price **K = 100**
 * annualized volatility rate **σ = 0.24**
 * annualized risk-free rate **r = 0.07**
@@ -52,8 +55,9 @@ However, for the purposes of this report (according to the guidelines), the defa
 
 The default number of Monte Carlo simulation iterations is 1000 (**nReps = 1000**).
 
+In order to determine the optimal value of the barrier level, I simulate the value of the option depending on its value.
 
-```{r barrier simulation, eval=FALSE, include=FALSE}
+```{r barrier simulation, include=FALSE}
 barrier_sim <- data.frame()
 for (barrier in seq(50, 200, 1)){
   barrier_sim = rbind(barrier_sim, c(getEuropeanUpOutCallPrice(barrier = barrier), barrier))
@@ -61,7 +65,7 @@ for (barrier in seq(50, 200, 1)){
 colnames(barrier_sim) <- c("price", "barrier")
 ```
 
-```{r barrier simulation plot, eval=FALSE, include=FALSE}
+```{r barrier simulation plot, echo=FALSE}
 ggplot(barrier_sim, aes(x = barrier, y = price)) +
   geom_point() +
   labs(x = "Barrier", y = "Price", title = "Price vs Barrier level") +
@@ -70,12 +74,21 @@ ggplot(barrier_sim, aes(x = barrier, y = price)) +
   geom_vline(xintercept=100, linetype="dashed", col = "blue", size = 1) +
   geom_text(aes(x=100, label="\nstrike price K = 100", y=2), colour="blue", angle=90) +
   theme_bw()
+
+install.packages("renv")
+renv::init()
 ```
+
+Analysis of the chart allows us to conclude that for any barrier level value below 100 the value of the option is equal to 0. This is because 100 is the strike price. Below this value, it is not profitable to exercise option options. It is also interesting that the value of options even for large values reaches a maximum level of about 8 and does not increase further. This may be because the volatility of the option is too low for the option price to reach some extreme values during this period.
+
+For the purposes of the report, I choose a barrier level value of **b = 130**. This is a purely arbitrary choice.
 
 
 ## Volatility rate simulation
 
-```{r volatility simulation, eval=FALSE, include=FALSE}
+In the next step, I look at how change in volatility rate affects the option price.
+
+```{r volatility simulation, include=FALSE}
 volatility_sim <- data.frame()
 
 for (vol in seq(0, 1, 0.001)){
@@ -84,7 +97,7 @@ for (vol in seq(0, 1, 0.001)){
 colnames(volatility_sim) <- c("price", "vol")
 ```
 
-```{r volatility simulation plot, eval=FALSE, include=FALSE}
+```{r volatility simulation plot, echo=FALSE}
 ggplot(volatility_sim, aes(x = vol, y = price)) + 
   labs(x = "Volatility rate", y = "Price", title = "Price vs Volatility rate") +
   geom_vline(xintercept=0.24, linetype="dashed", col = "blue", size = 1) +
@@ -93,10 +106,14 @@ ggplot(volatility_sim, aes(x = vol, y = price)) +
   theme_bw()
 ```
 
+It can be observed that for small and sufficiently large values of volatility rate, the option price is low. This is because the high volatility of the asset causes the chance of 'hitting' the right price range (above strike price and below barrier level) to decrease. The blue vertical line indicates the value indicated in the task instructions.
+
 
 ## Time to Maturity simulation
 
-```{r maturity simulation, eval=FALSE, include=FALSE}
+In the next step, I check how the change in time to maturity affects the option price.
+
+```{r maturity simulation, include=FALSE}
 maturity_sim <- data.frame()
 
 for (maturity in seq(0, 1, 0.001)){
@@ -105,7 +122,7 @@ for (maturity in seq(0, 1, 0.001)){
 colnames(maturity_sim) <- c("price", "time_to_maturity")
 ```
 
-```{r maturity simulation plot, eval=FALSE, include=FALSE}
+```{r maturity simulation plot, echo=FALSE, message=F}
 ggplot(maturity_sim, aes(x = time_to_maturity, y = price)) +
   labs(x = "Time to maturity", y = "Price", title = "Price vs Time to maturity") +
   geom_vline(xintercept=0.75, linetype="dashed", col = "blue", size = 1) +
@@ -114,10 +131,15 @@ ggplot(maturity_sim, aes(x = time_to_maturity, y = price)) +
   theme_bw()
 ```
 
+By analyzing the chart, it can be seen that initially, as the time to maturity increases, the option price increases reaching its highest value for about 0.5. Then the option price decreases. This can be explained by the fact that the smaller the time to maturity, the probability that in a short time the price of the asset will reach a satisfactory level. The decreasing price for large values of time to maturity can be explained by the fact that for longer periods the probability that the price of the asset will change significantly increases.
+The blue vertical line indicates the value indicated in the task instructions.
+
 
 ## Simultanious simulation
 
-```{r volatility_x_maturity simulation, eval=FALSE, include=FALSE}
+Finally, I analyze how a simultaneous change in volatility rate and time to maturity affects the option price.
+
+```{r volatility_x_maturity simulation, include=FALSE}
 volatility_x_maturity_sim <- data.frame()
 
 for (vol in seq(0, 1, 0.01)){
@@ -128,16 +150,23 @@ for (vol in seq(0, 1, 0.01)){
 colnames(volatility_x_maturity_sim) <- c("price", "vol", "time_to_maturity")
 ```
 
-```{r volatility_x_maturity simulation plot, eval=FALSE, include=FALSE}
+```{r volatility_x_maturity simulation plot, echo=FALSE}
 ggplot(volatility_x_maturity_sim, aes(x = vol, y = time_to_maturity)) +
-  labs(x = "Volatility", y = "Time to maturity", title = "", fill = "Price") +
+  labs(x = "Volatility rate", y = "Time to maturity", title = "", fill = "Price") +
   geom_raster(aes(fill = round(price))) +
   scale_fill_gradient(low = "white", high = "red") +
   theme_bw() +
   theme(legend.position = c(0.9, 0.7))
 ```
 
+The results obtained are in line with those obtained earlier from a separate analysis of the two variables. A tradeoff between volatility rate and time to maturity is noted. The lower the value of the volatility rate, in order to maintain a high option price, it is necessary to increase the time to maturity. Conversely, the greater the value of the volatility rate, the smaller the time to maturity should be (in order to maintain a high option price). 
+
+This can be explained as follows. With high volatility in the price of the asset, the time to maturity should be as early as possible so that the price does not have time to change too much. Looking from the side of time to maturity, to keep the option price high, volatility rate should be relatively low.
+
+
 # Results
+
+The goal of the project was to build an Rcpp package, test it and draw conclusions on how the various option parameters affect its pricing. It was found that too low and too high volatility rates negatively affect option pricing. Similar conclusions were noted for the time to maturity rate. However, in this case, the sensitivity of option valuation to a change in the time to maturity rate was not as great. Finally, the relation between the theoretical price of the option and two factors (simultaneously) was analyzed. It confirmed earlier observations and observed a tradeoff between volatility rate and time to maturity due to option pricing.
 
 
 *In accordance with the Honor Code, I certify that my answers here are my own work, and I did not make my solutions available to anyone else.*
