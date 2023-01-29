@@ -1,5 +1,5 @@
 # monte-carlo-option-pricing
-Path-dependent option pricing with Monte Carlo and Rcpp package
+Path-dependent option pricing with Monte Carlo and Rcpp package.
 
 This `Rcpp` package can be used to provide function defined in `C++` which will be responsible for providing valuations of path-dependent option of **European style up-and-out call option** using the Monte Carlo simulation technique.
 
