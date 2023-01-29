@@ -15,4 +15,4 @@ The package can be found in the [package](https://github.com/szymonsocha/monte-c
 
 In the [report](https://github.com/szymonsocha/monte-carlo-option-pricing/tree/main/report) directory I show an example of the use of `EUoutCalloptionPricer` package.
 
-Published report can be found [here](https://rpubs.com/sjimon/monte-carlo-option-pricing).
+The report published on *RPubs* can be found [here](https://rpubs.com/sjimon/monte-carlo-option-pricing).
