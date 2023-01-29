@@ -11,8 +11,8 @@ Input values:
 - $t$ - time to maturity
 - $b$ - barrier level
 
-The package can be found in the [package](https://github.com/szymonsocha/monte-carlo-option-pricing/tree/main/package) directory.
+The package can be found in the [package directory](https://github.com/szymonsocha/monte-carlo-option-pricing/tree/main/package).
 
-In the [report](https://github.com/szymonsocha/monte-carlo-option-pricing/tree/main/report) directory I show an example of the use of `EUoutCalloptionPricer` package.
+In the [report directory](https://github.com/szymonsocha/monte-carlo-option-pricing/tree/main/report) I show an example of the use of `EUoutCalloptionPricer` package.
 
 The report published on *RPubs* can be found [here](https://rpubs.com/sjimon/monte-carlo-option-pricing).
